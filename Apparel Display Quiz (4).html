@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APSN Retail Practice Site</title>
+<style>
+  :root {
+    --primary: #4A90E2;
+    --success: #2ECC71;
+    --danger: #E74C3C;
+    --bg: #F4F7F6;
+    --card: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+
+  header {
+    text-align: center;
+    background: #FFD166;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  h1 { font-size: 2.2em; margin: 0; color: #1D3557; }
+  p.subtitle { font-size: 1.2em; margin: 5px 0 0; color: #457B9D; font-weight: bold; }
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+  }
+
+  .tab-btn {
+    background-color: #E63946;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 0 #900C3F;
+  }
+
+  .tab-btn:hover { transform: translateY(-2px); }
+  .tab-btn.active {
+    background-color: #2A9D8F;
+    box-shadow: 0 4px 0 #1D7065;
+  }
+
+  /* Scoreboard */
+  .score-container {
+    text-align: center;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    max-width: 300px;
+    margin: 0 auto 20px;
+    font-size: 1.3em;
+    font-weight: bold;
+    border: 3px solid #4A90E2;
+  }
+
+  /* Quiz Content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    text-align: center;
+    border: 2px solid #E0E0E0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-num {
+    background: #1D3557;
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .q-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .q-img {
+    font-size: 4em;
+    margin: 10px 0;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .opt-btn {
+    background: #F0F4F8;
+    border: 2px solid #BCCCDC;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .opt-btn:hover { background: #D9E2EC; }
+  .opt-btn.correct { background: var(--success) !important; color: white; border-color: #27AE60; }
+  .opt-btn.wrong { background: var(--danger) !important; color: white; border-color: #C0392B; }
+
+  .feedback {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 1.1em;
+    min-height: 25px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>👕 APSN Tanglin Retail Practice 🛍️</h1>
+  <p class="subtitle">Sec 3 Retail Operations: Apparel Display</p>
+</header>
+
+<div class="score-container">
+  ⭐ Score: <span id="score">0</span> / 50
+</div>
+
+<!-- Category Tabs -->
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab(0)">1. Store Fixtures (10)</button>
+  <button class="tab-btn" onclick="showTab(1)">2. Garment Types (10)</button>
+  <button class="tab-btn" onclick="showTab(2)">3. Sizes & Markers (10)</button>
+  <button class="tab-btn" onclick="showTab(3)">4. Hanging Rules (10)</button>
+  <button class="tab-btn" onclick="showTab(4)">5. Store Sorting (10)</button>
+</div>
+
+<main id="quiz-container">
+  <!-- Tabs will be rendered here by JS -->
+</main>
+
+<script>
+// 50 Questions Data directly based on T3W8-T3W10 slides
+const quizData = [
+  // SECTION 1: Store Fixtures
+  {
+    category: "Store Fixtures",
+    questions: [
+      { q: "What fixture shows how clothes look when worn?", img: "🧍‍♂️", opts: ["Mannequin", "Top Hanger", "Clip Hanger", "Size Marker"], ans: 0 },
+      { q: "What is easy to move around the store?", img: "🛒", opts: ["Mannequin", "Rolling Garment Rack", "Wall Shelf", "Mirror"], ans: 1 },
+      { q: "Which hanger do we use for T-Shirts?", img: "👔", opts: ["Clip Hanger", "Top Hanger", "Pants Rack", "Size Ring"], ans: 1 },
+      { q: "Which hanger do we use for Shorts & Skirts?", img: "🩳", opts: ["Top Hanger", "Clip Hanger", "Coat Hanger", "Tie Rack"], ans: 1 },
+      { q: "Why do we use fixtures?", img: "✨", opts: ["Make store neat", "To throw clothes", "To play games", "To hide items"], ans: 0 },
+      { q: "Which item helps customers see clothes clearly?", img: "👀", opts: ["Mannequin", "Dark Box", "Bag", "Floor"], ans: 0 },
+      { q: "Where do we hang clothes on wheels?", img: "🛞", opts: ["Rolling Garment Rack", "Chair", "Table", "Door"], ans: 0 },
+      { q: "Top hangers keep T-shirts...", img: "👕", opts: ["Wrinkle-free", "Dirty", "Wet", "Torn"], ans: 0 },
+      { q: "Clip hangers help maintain garment...", img: "📐", opts: ["Shape", "Color", "Smell", "Price"], ans: 0 },
+      { q: "Good displays help customers to...", img: "🛍️", opts: ["Find items easily", "Run away", "Sleep", "Cry"], ans: 0 }
+    ]
+  },
+  // SECTION 2: Garment Types
+  {
+    category: "Garment Types",
+    questions: [
+      { q: "What type of garment is this?", img: "👕", opts: ["Short Sleeve T-Shirt", "Jeans", "Skirt", "Jacket"], ans: 0 },
+      { q: "What type of garment is this?", img: "🧥", opts: ["Jacket", "Shorts", "Polo Tee", "Track Pants"], ans: 0 },
+      { q: "What type of garment is this?", img: "👖", opts: ["Jeans / Pants", "Dress", "Sweater", "Short Sleeve Shirt"], ans: 0 },
+      { q: "What type of garment is this?", img: "👗", opts: ["Dress", "Polo Tee", "Shorts", "Jacket"], ans: 0 },
+      { q: "What type of garment is this?", img: "🩳", opts: ["Shorts", "Long Sleeve Shirt", "Track Pants", "Sweater"], ans: 0 },
+      { q: "What type of garment is this?", img: "👚", opts: ["Polo Tee", "Jeans", "Skirt", "Shorts"], ans: 0 },
+      { q: "Which one covers your legs fully?", img: "🏃‍♂️", opts: ["Track Pants", "Shorts", "T-Shirt", "Top Hanger"], ans: 0 },
+      { q: "Which garment keeps you warm in cold weather?", img: "🧥", opts: ["Sweater", "Shorts", "Skirt", "Polo Tee"], ans: 0 },
+      { q: "Which garment has buttons and a collar?", img: "👔", opts: ["Shirt", "Track Pants", "Skirt", "Clip Hanger"], ans: 0 },
+      { q: "A T-shirt is a type of...", img: "🏷️", opts: ["Garment", "Fixture", "Size Marker", "Rolling Rack"], ans: 0 }
+    ]
+  },
+  // SECTION 3: Sizes & Markers
+  {
+    category: "Sizes & Markers",
+    questions: [
+      { q: "What does letter 'S' stand for?", img: "🏷️", opts: ["Small", "Super", "Short", "Smart"], ans: 0 },
+      { q: "What does letter 'M' stand for?", img: "🏷️", opts: ["Medium", "Mini", "Maximum", "Mega"], ans: 0 },
+      { q: "What does letter 'L' stand for?", img: "🏷️", opts: ["Large", "Long", "Little", "Low"], ans: 0 },
+      { q: "What does letter 'XS' stand for?", img: "🏷️", opts: ["Extra Small", "Extra Soft", "Extra Strong", "Extra S"], ans: 0 },
+      { q: "Which size marker is SMALLER?", img: "🔍", opts: ["S", "L", "XL", "2XL"], ans: 0 },
+      { q: "Which size marker is LARGER?", img: "🔎", opts: ["XL", "XS", "S", "M"], ans: 0 },
+      { q: "Where do we put size markers?", img: "🏷️", opts: ["On the hanger hook", "On the floor", "In the pocket", "On the shoes"], ans: 0 },
+      { q: "Arrange sizes from smallest to biggest: S, M, L", img: "📊", opts: ["S -> M -> L", "L -> M -> S", "M -> S -> L", "S -> L -> M"], ans: 0 },
+      { q: "Which size marker is the smallest?", img: "⬛", opts: ["XXS", "XS", "S", "M"], ans: 0 },
+      { q: "Size markers help customers find their correct...", img: "👔", opts: ["Fitting / Size", "Price", "Color", "Brand"], ans: 0 }
+    ]
+  },
+  // SECTION 4: Hanging Rules
+  {
+    category: "Hanging Rules",
+    questions: [
+      { q: "What MUST you avoid when hanging a T-Shirt?", img: "🚫", opts: ["Stretching the collar", "Holding the shirt", "Using a hanger", "Placing on table"], ans: 0 },
+      { q: "Where should you insert the hanger?", img: "👕", opts: ["From the bottom up", "Force into collar", "Tear the neck", "From the sleeve"], ans: 0 },
+      { q: "Before hanging, flat the T-shirt on a...", img: "🪑", opts: ["Clean Table", "Floor", "Trash Can", "Chair"], ans: 0 },
+      { q: "When unhanging a T-shirt, we should...", img: "🤲", opts: ["Remove gently", "Pull hard on collar", "Rip the garment", "Throw hanger"], ans: 0 },
+      { q: "After taking off the T-shirt, fold it and...", img: "👕", opts: ["Return to original place", "Leave on floor", "Hide under rack", "Throw away"], ans: 0 },
+      { q: "Stretching the collar makes clothes look...", img: "😖", opts: ["Damaged & Out of shape", "Neat", "New", "Clean"], ans: 0 },
+      { q: "Empty hangers should be...", img: "♻️", opts: ["Returned to original place", "Thrown on floor", "Taken home", "Broken"], ans: 0 },
+      { q: "What do you collect after checking garment size?", img: "🏷️", opts: ["Correct Size Hanger", "Wrong Hanger", "Shoe", "Belt"], ans: 0 },
+      { q: "Step 1 of hanging T-shirt: Lay shirt...", img: "📋", opts: ["Flat on table", "In a ball", "On the ground", "Inside bag"], ans: 0 },
+      { q: "We unhang clothes carefully to protect the...", img: "✨", opts: ["Collar & Fabric", "Floor", "Shoes", "Wheels"], ans: 0 }
+    ]
+  },
+  // SECTION 5: Store Sorting
+  {
+    category: "Store Sorting",
+    questions: [
+      { q: "Which 3 ways do we sort garments on a rack?", img: "🗂️", opts: ["Design, Color, Size", "Price, Weight, Height", "Age, Name, Date", "Dirt, Smell, Wrinkles"], ans: 0 },
+      { q: "When sorting by size, how do we arrange?", img: "➡️", opts: ["Smallest to Biggest", "Biggest to Smallest", "Randomly", "By Color only"], ans: 0 },
+      { q: "Garments of the SAME color should be placed...", img: "🎨", opts: ["Together", "Far apart", "On the floor", "Hidden"], ans: 0 },
+      { q: "Sorting garments makes the store look...", img: "🏬", opts: ["Professional & Neat", "Messy", "Dark", "Crowded"], ans: 0 },
+      { q: "All hanger hooks on a rack should face...", img: "↪️", opts: ["Same direction", "Different directions", "Downwards", "Inside out"], ans: 0 },
+      { q: "Where do we sort clothes by design?", img: "👗", opts: ["Rolling Rack", "Trash Bin", "Under table", "Window"], ans: 0 },
+      { q: "If a Medium T-Shirt is at Large section, what to do?", img: "🔄", opts: ["Move to Medium section", "Leave it", "Throw away", "Hide it"], ans: 0 },
+      { q: "Sorting helps customers to shop...", img: "😊", opts: ["Easily & Happy", "Slowly & Angry", "Never", "Harder"], ans: 0 },
+      { q: "Short sleeve and long sleeve should be grouped by...", img: "✂️", opts: ["Design / Type", "Weight", "Owner", "Price"], ans: 0 },
+      { q: "Good retail operation workers always keep displays...", img: "🌟", opts: ["Organised", "Messy", "Dirty", "Empty"], ans: 0 }
+    ]
+  }
+];
+
+let globalScore = 0;
+let answeredQuestions = new Set();
+
+function initQuiz() {
+  const container = document.getElementById('quiz-container');
+  let questionCounter = 1;
+
+  quizData.forEach((sec, sIdx) => {
+    const tabDiv = document.createElement('div');
+    tabDiv.className = `tab-content ${sIdx === 0 ? 'active' : ''}`;
+    tabDiv.id = `tab-${sIdx}`;
+
+    const grid = document.createElement('div');
+    grid.className = 'quiz-grid';
+
+    sec.questions.forEach((q, qIdx) => {
+      const qNum = questionCounter++;
+      const card = document.createElement('div');
+      card.className = 'card';
+      
+      card.innerHTML = `
+        <div class="card-num">${qNum}</div>
+        <div class="q-title">${q.q}</div>
+        <div class="q-img">${q.img}</div>
+        <div class="options-grid">
+          ${q.opts.map((opt, oIdx) => `
+            <button class="opt-btn" onclick="checkAnswer(this, ${qNum}, ${oIdx}, ${q.ans})">${opt}</button>
+          `).join('')}
+        </div>
+        <div class="feedback" id="fb-${qNum}"></div>
+      `;
+      grid.appendChild(card);
+    });
+
+    tabDiv.appendChild(grid);
+    container.appendChild(tabDiv);
+  });
+}
+
+function showTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.tab-content').forEach((content, i) => {
+    content.classList.toggle('active', i === idx);
+  });
+}
+
+function checkAnswer(btn, qNum, selectedOpt, correctOpt) {
+  if (answeredQuestions.has(qNum)) return; // Prevent multi-clicking
+
+  const card = btn.closest('.card');
+  const buttons = card.querySelectorAll('.opt-btn');
+  const fb = document.getElementById(`fb-${qNum}`);
+
+  buttons.forEach(b => b.disabled = true);
+
+  if (selectedOpt === correctOpt) {
+    btn.classList.add('correct');
+    fb.innerHTML = "🎉 Correct! Well done!";
+    fb.style.color = "var(--success)";
+    globalScore++;
+    document.getElementById('score').innerText = globalScore;
+  } else {
+    btn.classList.add('wrong');
+    buttons[correctOpt].classList.add('correct');
+    fb.innerHTML = "❌ Try again next time!";
+    fb.style.color = "var(--danger)";
+  }
+
+  answeredQuestions.add(qNum);
+}
+
+// Start Quiz
+window.onload = initQuiz;
+</script>
+</body>
+</html>
